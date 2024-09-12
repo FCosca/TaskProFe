@@ -1,38 +1,206 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  .app {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .sidebar {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    top: 0;
+    left: 0;
+    height: 100vh;
   }
-}
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar a {
+    text-decoration: none;
+    color: #337ab7;
+  }
+  
+  .sidebar a:hover {
+    color: #23527c;
+  }
+  
+  .sidebar img {
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .content {
+    margin-left: 200px;
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .header h1 {
+    margin: 0;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .actions button {
+    margin-right: 10px;
+  }
+  
+  .task-board {
+    padding: 20px;
+  }
+  
+  .status-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .status-filter button {
+    margin-right: 10px;
+  }
+  
+  .task-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .task {
+    width: 250px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .task-title {
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .task-priority {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .task-details {
+    padding: 10px;
+  }
+  
+  .task-date {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .task-comments {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .task-likes {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  /* Aggiunte per la pagina di login */
+  .login-container {
+    max-width: 300px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .login-form label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .login-form input[type="text"], .login-form input[type="password"] {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .login-form input[type="text"]:focus, .login-form input[type="password"]:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-form button[type="submit"] {
+    width: 100%;
+    height: 40px;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .login-form button[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+  
+  .col-md-1-5 {
+    width: calc(1.5 * 8.33333333%);
+  }
+  .col-md-10-5 {
+    width: calc(10.5 * 8.33333333%);
+  }
+
+  .col-md-1-5, .col-md-10-5 {
+    padding-left: 0;
+    padding-right: 0;
+  }
