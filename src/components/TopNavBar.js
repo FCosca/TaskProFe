@@ -1,7 +1,7 @@
 import React from 'react';
 import '../style/TopNavBar.css'; // Assicurati di creare anche il file CSS per lo stile
 
-const TopNavBar = ({ user }) => {
+const TopNavBar = ({ user, onLogout }) => {
     return (
         <div className="top-nav-bar">
             <div className="logo">TaskMaster</div>
@@ -14,6 +14,7 @@ const TopNavBar = ({ user }) => {
                     <span className="user-name">{user.firstName}</span>
                     <span className="user-name">{user.lastName}</span>
                 </div>
+                <button onClick={onLogout} className="btn btn-danger logout-button">Logout</button>
             </div>
         </div>
     );

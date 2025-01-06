@@ -17,33 +17,51 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true); // Aggiungi uno stato per la splash screen
-  const handleDebug = () => {
-    console.log('Utente:', user);
-  };
+  const [loginError, setLoginError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setIsLoggedIn(true);
-      axios.get(`${BASE_URL}/users/me`, {
-        headers: {
-          Authorization: `Bearer ${token}` // Add token to the header
-        }
-      })
-        .then(response => {
-          console.log('Response from /users/me:', response.data);
-          setUser(response.data);
-          setIsLoading(false); // Disattiva la splash screen quando la verifica è completata
-        })
-        .catch(error => {
-          console.error('Error making request to /users/me:', error);
-          setIsLoading(false); // Disattiva la splash screen anche in caso di errore
-        });
+      verifyToken(token);
     } else {
-      setIsLoading(false); // Disattiva la splash screen se non è presente un token
+      setIsLoading(false);
     }
   }, []);
+
+  const verifyToken = (token) => {
+    axios.defaults.headers['Authorization'] = `Bearer ${token}`;
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        console.log('Response from /users/me:', response.data);
+        setUser(response.data);
+        setIsLoggedIn(true);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error verifying token:', error);
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
+        setIsLoading(false);
+        setLoginError('Invalid token. Please log in again.');
+      });
+  };
+
+  const handleLogin = (email, password) => {
+    axios.post(`${BASE_URL}/auth/login`, { email, password })
+      .then(response => {
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        verifyToken(token);
+      })
+      .catch(error => {
+        console.error('Error logging in:', error);
+        setLoginError('Invalid email or password. Please try again.');
+      });
+  };
 
   if (isLoading) {
     return (
@@ -65,80 +83,11 @@ function App() {
       </div>
     );
   }
-
-
-  const handleLogin = async (email, password) => {
-    try {
-      const response = await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-      if (!response.ok) {
-        throw new Error('Errore nella richiesta');
-      }
-      const data = await response.json();
-      console.log('API Response:', data);
-      if (data) {
-        const token = data.token;
-        setIsLoggedIn(true);
-        localStorage.setItem('token', token);
   
-        // Attendere che la chiamata auth/login sia completata
-        await axios.get(`${BASE_URL}/auth/validate-token`, {
-          headers: {
-            Authorization: `${token}`
-          }
-        })
-        .then(response => {
-          if (response.status === 200) {
-            // Token is valid, fetch user data
-            if (!user || !user.id) {
-              axios.get(`${BASE_URL}/users/me`, {
-                headers: {
-                  Authorization: `Bearer ${token}` // Add token to the header
-                }
-              })
-                .then(response => {
-                  console.log('Response from /users/me:', response.data);
-                  setUser(response.data);
-                })
-                .catch(error => {
-                  console.error('Error making request to /users/me:', error);
-                });
-            }
-          } else {
-            // Token is invalid, clear local storage and redirect to login page
-            localStorage.removeItem('token');
-            setIsLoggedIn(false);
-            setUser({});
-            alert('Token non valido, si prega di effettuare nuovamente l\'accesso');
-          }
-        })
-        .catch(error => {
-          console.error('Error validating token:', error);
-          // Token is invalid, clear local storage and redirect to login page
-          localStorage.removeItem('token');
-          setIsLoggedIn(false);
-          setUser({});
-          alert('Token non valido, si prega di effettuare nuovamente l\'accesso');
-        });
-      } else {
-        alert('Invalid email or password');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUser({});
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    window.location.reload();
   };
 
   // Render components only when authentication check is complete
@@ -150,7 +99,7 @@ function App() {
             <Sidebar />
           </div>
           <div className="col-md-10-5">
-            <TopNavBar user={user} />
+            <TopNavBar user={user} onLogout={handleLogout}/>
             <div className="main-content">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -159,7 +108,6 @@ function App() {
                 <Route path="/resource-chart" element={<ResourceChart />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>
-              <button onClick={handleDebug}>Debug</button>
             </div>
           </div>
         </div>
